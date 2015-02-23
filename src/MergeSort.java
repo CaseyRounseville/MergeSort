@@ -83,20 +83,13 @@ public class MergeSort {
    * @return A list representing a sorted version of list that was passed in.
    */
   public static ArrayList<String> mergeSort(ArrayList<String> list) {
-    if(list.size()<=1)
+    if(list.size()<=1){
       return list;
+    }
     else{
-      ArrayList<String>left=new ArrayList<String>();
-      ArrayList<String>right=new ArrayList<String>();
-      for(int i=0;i<list.size()/2;i++){
-        left.add(list.get(i));
-      }
-      for(int i=(list.size()/2);i<list.size();i++){
-        right.add(list.get(i));
-      }
-      mergeSort(left);
-      mergeSort(right);
-      return merge(left,right);
+      ArrayList<String>left=new ArrayList<String>(list.subList(0,list.size()/2));
+      ArrayList<String>right=new ArrayList<String>(list.subList(list.size()/2,list.size()));
+      return merge(mergeSort(left),mergeSort(right),list);
     }
   }
   
@@ -107,19 +100,18 @@ public class MergeSort {
    * @param rightList The second list to be merged.
    * @return A single list by merging the two parameters in sorted order.
    */
-  private static ArrayList<String> merge(ArrayList<String> leftList, ArrayList<String> rightList) {
-    ArrayList<String>result=new ArrayList<String>();
-    while(leftList.size()>0&&rightList.size()>0){
-      if(leftList.get(0).compareTo(rightList.get(0))>0)
-        result.add(rightList.remove(0));
-      else
-        result.add(leftList.remove(0));
-    }
-    while(leftList.size()>0){
-      result.add(leftList.remove(0));
-    }
-    while(rightList.size()>0){
-      result.add(rightList.remove(0));
+  private static ArrayList<String> merge(ArrayList<String> leftList, ArrayList<String> rightList,ArrayList<String>result) {
+    int i1=0;
+    int i2=0;
+    for(int i=0;i<result.size();i++){
+      if(i2>=rightList.size() || (i1<leftList.size() && (leftList.get(i1).compareTo(rightList.get(i2))<0))){
+        result.set(i,leftList.get(i1));
+        i1++;
+      }
+      else{
+        result.set(i,rightList.get(i2));
+        i2++;
+      }
     }
     return result;
   }
